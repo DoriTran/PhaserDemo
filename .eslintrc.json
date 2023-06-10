@@ -32,6 +32,7 @@
     "max-classes-per-file": "off",
     "no-useless-constructor": "off",
     "import/no-cycle": "off",
-    "no-bitwise": "off"
+    "no-bitwise": "off",
+    "no-param-reassign": "off"
   }
 }

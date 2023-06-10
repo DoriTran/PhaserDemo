@@ -1,7 +1,10 @@
 import Phaser from "phaser";
 import { useEffect, useRef } from "react";
 
+import ImageURILoaderPlugin from "phaser3-rex-plugins/plugins/imageuriloader-plugin";
+
 import { BootScene } from "./scenes/BootScene.scene";
+import { WorldScene } from "./scenes/WorldScene.scene";
 
 const config = {
   type: Phaser.AUTO,
@@ -12,6 +15,8 @@ const config = {
     width: window.innerWidth,
     height: window.innerHeight,
   },
+  zoom: 2,
+  render: { pixelArt: true, antialias: false, autoResize: false },
   physics: {
     default: "arcade",
     arcade: {
@@ -19,7 +24,16 @@ const config = {
       debug: true,
     },
   },
-  scene: [BootScene],
+  plugins: {
+    global: [
+      {
+        key: "rexImageURILoader",
+        plugin: ImageURILoaderPlugin,
+        start: true,
+      },
+    ],
+  },
+  scene: [BootScene, WorldScene],
 };
 
 const usePhaser = () => {

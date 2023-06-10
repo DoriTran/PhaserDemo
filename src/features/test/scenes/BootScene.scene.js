@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable class-methods-use-this */
 import Phaser from "phaser";
 import tiles from "assets/images/spritesheet.png";
@@ -10,15 +11,15 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("tiles", tiles);
+    this.load.rexImageURI("tiles", tiles);
     this.load.tilemapTiledJSON("map", map);
-    this.load.spritesheet("player", player, {
+    this.load.rexImageURI("player", player, {
       frameWidth: 16,
       frameHeight: 16,
     });
   }
 
   create() {
-    // this.scene.start("WorldScene");
+    this.scene.start("WorldScene");
   }
 }
