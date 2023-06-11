@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-unused-vars */
 import Phaser from "phaser";
 import EncounterZone from "../objects/EncounterZone";
@@ -108,61 +109,40 @@ export class WorldScene extends Phaser.Scene {
       true
     );
 
-    this.physics.add.overlap(
-      this.player,
-      this.eventZones,
-      triggerZone,
-      false,
-      this
-    );
+    this.physics.add.overlap(this.player, this.eventZones, triggerZone, false, this);
   }
 
   createItems(items) {
     this.itemZones = this.physics.add.group({ classType: EventZone });
     this.itemSprites = this.physics.add.group({ classType: FramedSprite });
 
-    items.forEach(
-      ({ x, y, texture, frames, startFrameKey, startFlipX, onInteract }) => {
-        const sprite = new FramedSprite(
-          this,
-          x,
-          y,
-          texture,
-          frames,
-          startFrameKey
-        );
-        sprite.flipX = !!startFlipX;
+    items.forEach(({ x, y, texture, frames, startFrameKey, startFlipX, onInteract }) => {
+      const sprite = new FramedSprite(this, x, y, texture, frames, startFrameKey);
+      sprite.flipX = !!startFlipX;
 
-        const zone = new EventZone(
-          this,
-          x,
-          y,
-          sprite.width + ITEM_PADDING,
-          sprite.height + ITEM_PADDING,
-          () => {
-            this.actionKey.on("down", () => {
-              this.rotateTowardsPlayer(sprite);
-              onInteract();
-            });
-          },
-          () => {
-            this.actionKey.off("down");
-          }
-        );
+      const zone = new EventZone(
+        this,
+        x,
+        y,
+        sprite.width + ITEM_PADDING,
+        sprite.height + ITEM_PADDING,
+        () => {
+          this.actionKey.on("down", () => {
+            this.rotateTowardsPlayer(sprite);
+            onInteract();
+          });
+        },
+        () => {
+          this.actionKey.off("down");
+        }
+      );
 
-        this.itemZones.add(zone, true);
-        this.itemSprites.add(sprite, true);
-      }
-    );
+      this.itemZones.add(zone, true);
+      this.itemSprites.add(sprite, true);
+    });
 
     this.itemSprites.children.entries.forEach(makeImmovable);
-    this.physics.add.overlap(
-      this.player,
-      this.itemZones,
-      triggerZone,
-      false,
-      this
-    );
+    this.physics.add.overlap(this.player, this.itemZones, triggerZone, false, this);
     this.physics.add.collider(this.player, this.itemSprites);
   }
 
@@ -201,13 +181,7 @@ export class WorldScene extends Phaser.Scene {
     });
 
     this.encounterSprites.children.entries.forEach(makeImmovable);
-    this.physics.add.overlap(
-      this.player,
-      this.encounterZones,
-      this.onEncounter,
-      false,
-      this
-    );
+    this.physics.add.overlap(this.player, this.encounterZones, this.onEncounter, false, this);
     this.physics.add.collider(this.player, this.encounterSprites);
   }
 
@@ -258,6 +232,17 @@ export class WorldScene extends Phaser.Scene {
     this.createEvents(EVENTS);
     this.createItems(ITEMS);
     this.createEncounters(ENCOUNTERS);
+
+    this.spawns = this.physics.add.group({
+      classType: Phaser.GameObjects.Zone,
+    });
+    for (let i = 0; i < 30; i++) {
+      const x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+      const y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+      // parameters are x, y, width, height
+      this.spawns.create(x, y, 20, 20);
+    }
+    this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this);
   }
 
   update(/* time, delta */) {

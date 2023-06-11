@@ -1,22 +1,24 @@
+/* eslint-disable no-unused-vars */
 import Phaser from "phaser";
 import { useEffect, useRef } from "react";
 
 import ImageURILoaderPlugin from "phaser3-rex-plugins/plugins/imageuriloader-plugin";
 
-import { BootScene } from "./scenes/BootScene.scene";
-import { WorldScene } from "./scenes/WorldScene.scene";
+import { BootScene } from "./scenes/Boot.scene";
+import { WorldScene } from "./scenes/World.scene";
+import { BattleScene } from "./scenes/Battle.scene";
+import { UIScene } from "./scenes/UI.scene";
 
 const config = {
   type: Phaser.AUTO,
   parent: "test",
   backgroundColor: "#F8E8EE",
   scale: {
-    mode: Phaser.Scale.ScaleModes.RESIZE,
+    // mode: Phaser.Scale.ScaleModes.RESIZE,
     width: window.innerWidth,
     height: window.innerHeight,
   },
   zoom: 2,
-  render: { pixelArt: true, antialias: false, autoResize: false },
   physics: {
     default: "arcade",
     arcade: {
@@ -33,7 +35,8 @@ const config = {
       },
     ],
   },
-  scene: [BootScene, WorldScene],
+  // scene: [BootScene, WorldScene], // Part 1
+  scene: [BootScene, BattleScene, UIScene], // Part 2
 };
 
 const usePhaser = () => {
